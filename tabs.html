@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>panel tab1 </title>
+    <link rel="stylesheet" type="text/css" href="../ext-4.2.1-gpl/ext-4.2.1.883/resources/css/ext-all.css" />
+    <script type="text/javascript" src="../ext-4.2.1-gpl/ext-4.2.1.883/bootstrap.js"></script>
+    <script type="text/javascript" src="../ext-4.2.1-gpl/ext-4.2.1.883/locale/ext-lang-zh_CN.js"></script>
+
+<script type="text/javascript">
+//toolbar 2  创建 toolbar  返回 toolbar
+    function toolbar1(){
+      var tbar = new Ext.Toolbar();
+
+            var menuHistory = new Ext.menu.Menu(
+                {
+                    items:[
+                        {text:'今天'},
+                        {text:'昨天'},
+                        {text:'一周'},
+                        {text:'一月'},
+                    ]
+                }
+            );
+      var menu1 = new Ext.menu.Menu({
+          items: [
+              {text: '新建'},
+              {text: '打开'},
+              {text:'历史',menu:menuHistory},//嵌套子菜单
+              {text: '关闭'}
+          ]
+      });
+      var menu2 = new Ext.menu.Menu({
+          items: [
+              {text: '复制'},
+              {text: '剪切'},
+              {text: '撤销'}
+          ]
+      });
+
+      var menu3 = new Ext.menu.Menu({
+          items: [
+              {text: 'HTML'},
+              {text: 'Java'},
+              {text: 'c++'}
+          ]
+      });
+
+      // 为工具条添加4个按钮
+      tbar.add(
+          {
+              text: '文件',
+              menu: menu1
+          },
+          {
+              text: '编辑',
+              menu: menu2
+          },
+          {
+              text: '语言',
+              menu: menu3
+
+          }
+      );
+      return  tbar;
+
+      }
+    </script>
+
+  <script type="text/javascript">
+  // toobar  的另一种方法
+    function toolbar2(){
+
+  var filed1 = new Ext.form.Field();
+
+  var tbar = Ext.create("Ext.Toolbar", {
+      items: ['文字', "-", {
+          xtype: "splitbutton",
+          text: "按钮"
+      }, {
+          text: "菜单",
+          menu:
+          {
+              items: [
+                  {
+                      text: '选项1'
+                  }, {
+                      text: '选项2'
+                  }, {
+                      text: '选项3',
+                      handler: function () {
+                          Ext.Msg.alert("提示", "来自菜单的消息");
+                      }
+                  }
+              ]
+          }
+      }, "->", "关键字：", filed1, {
+          text: "搜索",
+          handler: function () {
+              store.load({ params: { keyword: filed1.getValue()} });
+          }
+      }
+      ]
+  });
+  return tbar;
+}
+  </script>
+
+
+
+
+
+    <script type="text/javascript">
+
+		 function panel1(){
+
+      var tbar=  toolbar1();
+
+				var i = 4 ;
+				//注意:每个Tab标签只渲染一次
+				var tabs = new Ext.TabPanel({ //创建 tab 页标签面板
+          title:"面板应用",
+          collapsible:true,
+          titleCollapse:true,
+          x:100,
+          y:50,
+          width:800,
+          height:500,
+          frame:true,
+          floating:true,//当设置floating为true时x,y项才有效
+          draggable:true, //可拖动
+					renderTo: Ext.getBody(),//绑定在body标签上
+					activeTab: 0,//初始显示第几个Tab页
+					deferredRender: false,//是否在显示每个标签的时候再渲染标签中的内容.默认true
+					tabPosition: 'top',//表示TabPanel头显示的位置,只有两个值top和bottom.默认是top.
+					enableTabScroll: true,//当Tab标签过多时,出现滚动条
+           bodyBorder:true,//绑定在body标签上
+    //  tbar:[{text:"打开"},{text:"保存"},{text:"关闭"}],
+    tbar: tbar,
+          tools:[
+           {id:'toggle'},
+            {id:'save'},
+           {id:'help',handler:function () {alert("你需要我的帮助");}},
+            {id:'refresh'},
+           {id:'maximize'},
+           {id:'close'}
+         ],
+					items: [//Tab的个数
+					{
+						title: 'tab1',
+						html: 'tab1面板',
+						listeners: {render:function(){//为每个Tab标签添加监听器.当标签渲染时触发
+							Ext.Msg.alert("tab1面板","渲染tab1面板成功") ;
+						}}
+					},
+          {
+						title: 'tab2',
+						html: 'tab2面板'
+					},
+          {
+						title: 'tab3',
+						html: 'tab3面板',
+						closable: true   //可以关闭
+					},
+          {
+						title: 'tab4',
+						html: 'tab4面板',
+						closable: true   //可以关闭
+					}
+        ],
+
+					//添加一个底部工具栏,并且在该工具栏上添加两个按钮
+					bbar:[
+          {text:'低端状态栏'},
+					{
+						text:'添加标签',
+						//添按钮被点击时触发这个匿名函数(注意:该属性在button中能查到).
+						handler:function(){
+
+							var id = i ;
+							//添加一个Tab标签
+							tabs.add({
+								id: id,
+								title:'Tab '+i,
+								closable: true
+							}) ;
+							i=i+1;
+							tabs.setActiveTab(id) ;//当id为"id"的Tab标签显示(变为活动标签).
+						}
+					},
+          {
+						text:'删除标签',
+						handler: function(){
+							//获得当前活动标签的引用
+							var t = tabs.getActiveTab();
+							if(t.closable){
+								tabs.remove(t);//删除标签
+							}else{
+								Ext.Msg.alert("提示","该标签不能关闭") ;
+							}
+						}
+					}
+        ]
+
+				});
+
+				//把TabPanel组件充满整个body容器.
+		//		new Ext.Viewport({
+			//		layout: 'fit',
+		//			items: tabs
+		//		});
+
+			};
+
+  </script>
+
+   <script type="text/javascript">
+     Ext.onReady(panel1); //加载panel
+   </script>
+    </head>
+    <body>
+    panel  tabs
+    </body>
+</html>
